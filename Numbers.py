@@ -160,4 +160,4 @@ class RNum:
         return RNum(self.val[0] * -1, self.val[1])
 
 
-
+# TODO roots and constants
