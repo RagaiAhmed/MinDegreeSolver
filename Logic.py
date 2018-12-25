@@ -1,18 +1,18 @@
 from Numbers import RNum
 
-RNum.pr = 1e-10
+RNum.pr = 0.5
 
 
 class Eq:
-    def __init__(self, x, fx, deg, zero):
-        self.t = [RNum(zero, 1)]
-        self.deg = deg
+    def __init__(self, x, fx, deg):
+        self.t = []
+        self.deg = deg - 1
         self.ans = fx
-        self.avail = {0}
+
+        n=x
         while deg:
-            self.t.append(x)
-            self.avail.add(deg)
-            x *= x
+            self.t.append(n)
+            n *= x
             deg -= 1
 
     def norm(self, val, deg):
@@ -22,21 +22,16 @@ class Eq:
         self.ans /= fact
 
     def solve(self, other):
-        n = other.avail.difference(self.avail)
-        if len(n): raise TypeError
+        self.norm(other.t[-1], -1)
 
-        common = self.avail.intersection(other.avail).pop()
-        self.avail.remove(common)
-        other.avail.remove(common)
-
-        self.norm(other.t[common], common)
-
-        for deg in range(self.deg):
+        for deg in range(self.deg+1):
             self.t[deg] -= other.t[deg]
         self.ans -= other.ans
+        self.deg -= 1
+        self.t.pop()
 
     def f_ans(self, vals):
-        for i in range(self.deg - 1):
+        for i in range(0, self.deg):
             self.t[i] *= vals[i]
             self.ans -= self.t[i]
         return self.ans / self.t[-1]
@@ -47,16 +42,21 @@ par = []
 while sol:
     par.append(sol)
     sol = input().split()
-deg = len(par) - 1
+deg = len(par)
+
 eqs = []
 for sol in par:
     eqs.append(Eq(RNum(int(sol[0]), 1), RNum(int(sol[1]), 1), deg))
+
+if deg: deg -= 1
+
 while deg:
     for i in range(deg):
         eqs[i].solve(eqs[i + 1])
     deg -= 1
-vals = [0]
+vals = []
 for deg in range(0, len(par)):
     vals.append(eqs[deg].f_ans(vals))
     deg -= 1
-print(vals)
+
+print(",".join([str(x)for x in vals]))
