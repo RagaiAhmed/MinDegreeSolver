@@ -29,29 +29,6 @@ class RNum:
     def simplify(up, down):
         """
         A static method takes a fraction and simplifies it.
-        I made a search on simplifying methods but I decided to do one on my own
-        This algorithm maybe made before, Although I don't think so :3
-        
-        How it works:
-            
-            It is on a simple idea which is the reciprocal of a reciprocal of a number
-            is the number itself.
-            
-            But what benefit I earn from just making the reciprocal of the reciprocal.
-            What you really earn is it simplifies the fraction a little .
-            
-            We simplify the simplified using recursion explained in detail further on.
-            
-            First it changes the fraction into a mixed fraction "a whole number and a fraction"
-                if there is no remaining fraction then it returns the whole number over 1
-            then it simplifies the reciprocal which makes same steps and simplifies the reciprocal of it's fraction 
-            and so on in a recursion until there is no fraction for it's simplified reciprocal
-            then it remakes the number adding the whole number to it's simplified fraction
-            and returns it as simply as that
-            
-            I tried to compute it's complexity but I couldn't 
-             but what I know that it solves big really big numbers simplifications really fast
-            
         :param up: numerator
         :param down: denominator
         :return: a tuple representing the fraction
@@ -67,7 +44,6 @@ class RNum:
 
     def __add__(self, other):
         """
-        in case of addition
         :param other: RationalNumber to add
         :return:  the RationalNumber result of addition
         """
@@ -81,7 +57,6 @@ class RNum:
 
     def __sub__(self, other):
         """
-        in case of subtraction
         :param other: RationalNumber to subtract
         :return:  the RationalNumber result of subtraction
         """
@@ -95,7 +70,6 @@ class RNum:
 
     def __mul__(self, other):
         """
-        In case of multiplication
         :param other: RationalNumber to multiply with
         :return:New instance holding the Result of Multiplication 
         """
@@ -106,7 +80,6 @@ class RNum:
 
     def __truediv__(self, other):
         """
-        In case of division
         :param other: other number to be divided on
         :return: New instance holding the Result of division
         """
@@ -117,7 +90,6 @@ class RNum:
 
     def __pow__(self, power):
         """
-        Raises the Rational Number to a power
         :param power: an integer to raise  
         :return: New instance holding the result 
         """
@@ -125,7 +97,6 @@ class RNum:
 
     def __eq__(self, other):
         """
-        In case of Equality
         :param other:  other number to compare
         :return: Boolean
         """
@@ -147,7 +118,6 @@ class RNum:
 
     def __ne__(self, other):
         """
-        In case of non equality
         :param other: fraction to compare to
         :return: Boolean
         """
@@ -159,5 +129,10 @@ class RNum:
         """
         return RNum(self.val[0] * -1, self.val[1])
 
+    def __bool__(self):
+        """
+        :return: Bool of numerator only
+        """
+        return bool(self.val[0])
 
 # TODO roots and constants
