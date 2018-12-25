@@ -9,7 +9,7 @@ class Eq:
         self.deg = deg - 1
         self.ans = fx
 
-        n=x
+        n = x
         while deg:
             self.t.append(n)
             n *= x
@@ -24,7 +24,7 @@ class Eq:
     def solve(self, other):
         self.norm(other.t[-1], -1)
 
-        for deg in range(self.deg+1):
+        for deg in range(self.deg + 1):
             self.t[deg] -= other.t[deg]
         self.ans -= other.ans
         self.deg -= 1
@@ -37,26 +37,23 @@ class Eq:
         return self.ans / self.t[-1]
 
 
-sol = input().split()
-par = []
-while sol:
-    par.append(sol)
-    sol = input().split()
-deg = len(par)
-
+deg = int(input())
+tot = 0
 eqs = []
-for sol in par:
-    eqs.append(Eq(RNum(int(sol[0]), 1), RNum(int(sol[1]), 1), deg))
+for i in range(1, deg + 1):
+    tot += i ** deg
+    eqs.append(Eq(RNum(i, 1), RNum(tot, 1), deg))
 
 if deg: deg -= 1
-
 while deg:
     for i in range(deg):
         eqs[i].solve(eqs[i + 1])
     deg -= 1
 vals = []
-for deg in range(0, len(par)):
+for deg in range(0, len(eqs)):
     vals.append(eqs[deg].f_ans(vals))
     deg -= 1
-
-print(",".join([str(x)for x in vals]))
+ans = []
+for i in range(len(vals)):
+    ans.append("\\frac{{" + str(vals[i].val[0]) + "}\\cdot{x^" + str(i + 1) + "}}{" + str(vals[i].val[1]) + "}")
+print("+".join(ans))
