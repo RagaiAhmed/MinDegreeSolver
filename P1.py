@@ -1,4 +1,4 @@
-class RationalNumber:
+class RNum:
     """
     Class holding 2 integers a numerator and denominator representing a fraction
     - can deal with negatives ex : -7/9
@@ -6,6 +6,7 @@ class RationalNumber:
     - any operation can be applied on it ex: + , - , * , / , ** 
     - warranty free !! hold your numbers tight cause we ain't giving them back if you lost them
     """
+    pr = 1e-10  # precision
 
     def __init__(self, numerator, denominator):
         """
@@ -22,7 +23,7 @@ class RationalNumber:
             numerator *= -1
             denominator *= -1
         # a tuple holding the two integers representing the fraction simplified
-        self.val = RationalNumber.simplify(numerator, denominator)
+        self.val = RNum.simplify(numerator, denominator)
 
     @staticmethod
     def simplify(up, down):
@@ -57,10 +58,10 @@ class RationalNumber:
         """
         whole_number = int(up // down)  # the whole number
         remainder = up % down  # Note (remainder/down) is the fraction part
-        if remainder == 0:  # if no remainder
+        if remainder < RNum.pr:  # if no remainder or absolutely small one
             return whole_number, 1  # return the whole number over 1  as it is in a fraction form
-        reciprocal = RationalNumber.simplify(down, remainder)  # simplifies the fraction part reciprocal
-        fraction = (reciprocal[1]+reciprocal[0]*whole_number, reciprocal[0])  # returning the fraction to it's order
+        reciprocal = RNum.simplify(down, remainder)  # simplifies the fraction part reciprocal
+        fraction = (reciprocal[1] + reciprocal[0] * whole_number, reciprocal[0])  # returning the fraction to it's order
 
         return fraction
 
@@ -70,11 +71,13 @@ class RationalNumber:
         :param other: RationalNumber to add
         :return:  the RationalNumber result of addition
         """
-        # using cross multiplication
-        l_up = self.val[0] * other.val[1]
-        r_up = other.val[0] * self.val[1]
-        down = self.val[1] * other.val[1]
-        return RationalNumber(l_up + r_up, down)
+        if isinstance(other, self.__class__):
+            # using cross multiplication
+            l_up = self.val[0] * other.val[1]
+            r_up = other.val[0] * self.val[1]
+            down = self.val[1] * other.val[1]
+            return RNum(l_up + r_up, down)
+        return RNum(self.val[0] + other * self.val[1], self.val[1])
 
     def __sub__(self, other):
         """
@@ -82,11 +85,13 @@ class RationalNumber:
         :param other: RationalNumber to subtract
         :return:  the RationalNumber result of subtraction
         """
-        # using cross multiplication
-        l_up = self.val[0] * other.val[1]
-        r_up = other.val[0] * self.val[1]
-        down = self.val[1] * other.val[1]
-        return RationalNumber(l_up - r_up, down)
+        if isinstance(other, self.__class__):
+            # using cross multiplication
+            l_up = self.val[0] * other.val[1]
+            r_up = other.val[0] * self.val[1]
+            down = self.val[1] * other.val[1]
+            return RNum(l_up - r_up, down)
+        return RNum(self.val[0] - other * self.val[1], self.val[1])
 
     def __mul__(self, other):
         """
@@ -94,8 +99,10 @@ class RationalNumber:
         :param other: RationalNumber to multiply with
         :return:New instance holding the Result of Multiplication 
         """
-        # Numerator with numerator and denominator with denominator
-        return RationalNumber(self.val[0] * other.val[0], self.val[1] * other.val[1])
+        if isinstance(other, self.__class__):
+            # Numerator with numerator and denominator with denominator
+            return RNum(self.val[0] * other.val[0], self.val[1] * other.val[1])
+        return RNum(self.val[0] * other, self.val[1])
 
     def __truediv__(self, other):
         """
@@ -103,8 +110,10 @@ class RationalNumber:
         :param other: other number to be divided on
         :return: New instance holding the Result of division
         """
-        # Numerator with denominator and denominator with numerator
-        return RationalNumber(self.val[0] * other.val[1], self.val[1] * other.val[0])
+        if isinstance(other, self.__class__):
+            # Numerator with denominator and denominator with numerator
+            return RNum(self.val[0] * other.val[1], self.val[1] * other.val[0])
+        return RNum(self.val[0], self.val[1] * other)
 
     def __pow__(self, power):
         """
@@ -112,7 +121,7 @@ class RationalNumber:
         :param power: an integer to raise  
         :return: New instance holding the result 
         """
-        return RationalNumber(self.val[0] ** power, self.val[1] ** power)
+        return RNum(self.val[0] ** power, self.val[1] ** power)
 
     def __eq__(self, other):
         """
@@ -120,6 +129,7 @@ class RationalNumber:
         :param other:  other number to compare
         :return: Boolean
         """
+
         # compare their values
         return self.val == other.val
 
@@ -147,12 +157,7 @@ class RationalNumber:
         """
         :return: Negative of the fraction 
         """
-        return RationalNumber(self.val[0] * -1, self.val[1])
+        return RNum(self.val[0] * -1, self.val[1])
 
 
-"""
-TEST CASES 
-PUT WHATEVER YOU WANT xDD
-It took me days and days in this project please appreciate our work and put hard tests :3
-"""
-print(RationalNumber(5, -2.5))
+
