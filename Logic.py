@@ -4,56 +4,72 @@ RNum.pr = 0.5
 
 
 class Eq:
-    def __init__(self, x, fx, deg):
-        self.t = []
-        self.deg = deg - 1
+    def __init__(self, x, fx):
+        self.op = [x]
+        self.co_ef = [RNum(1)]
         self.ans = fx
 
-        n = x
-        while deg:
-            self.t.append(n)
-            n *= x
-            deg -= 1
+    def get_term(self, n):
+        tot = RNum(0)
+        for x in range(len(self.op)):
+            tot += (self.op[x] ** n) * self.co_ef[x]
+        return tot
 
-    def norm(self, val, deg):
-        fact = self.t[deg] / val
-        for i in range(len(self.t)):
-            self.t[i] /= fact
-        self.ans /= fact
+    def norm(self, n, val):
+        self.__imul__(val / self.get_term(n))
 
-    def solve(self, other):
-        self.norm(other.t[-1], -1)
+    def __iadd__(self, other):
+        self.op.extend(other.op)
+        self.co_ef.extend(other.co_ef)
+        self.ans += other.ans
+        return self
 
-        for deg in range(self.deg + 1):
-            self.t[deg] -= other.t[deg]
+    def __imul__(self, other):
+        for c in range(len(self.co_ef)):
+            self.co_ef[c] *= other
+        self.ans *= other
+        return self
+
+    def __isub__(self, other):
+        self.op.extend(other.op)
+        for c in other.co_ef:
+            self.co_ef.append(-c)
         self.ans -= other.ans
-        self.deg -= 1
-        self.t.pop()
+        return self
 
-    def f_ans(self, vals):
-        for i in range(0, self.deg):
-            self.t[i] *= vals[i]
-            self.ans -= self.t[i]
-        return self.ans / self.t[-1]
+    def __itruediv__(self, other):
+        return self.__imul__(RNum(1, other))
 
 
-deg = int(input())
-tot = 0
-eqs = []
-for i in range(1, deg + 1):
-    tot += i ** deg
-    eqs.append(Eq(RNum(i, 1), RNum(tot, 1), deg))
+class Solver:
+    def __init__(self):
+        self.deg = 0
 
-if deg: deg -= 1
-while deg:
-    for i in range(deg):
-        eqs[i].solve(eqs[i + 1])
-    deg -= 1
-vals = []
-for deg in range(0, len(eqs)):
-    vals.append(eqs[deg].f_ans(vals))
-    deg -= 1
-ans = []
-for i in range(len(vals)):
-    ans.append("\\frac{{" + str(vals[i].val[0]) + "}\\cdot{x^" + str(i + 1) + "}}{" + str(vals[i].val[1]) + "}")
-print("+".join(ans))
+        self.eqs = []
+
+    def add_pair(self, x, fx):
+        eq = Eq(x, fx)
+        for i in range(self.deg):
+            eq.norm(i, self.eqs[i].get_term(i))
+            eq -= self.eqs[i]
+        fc = eq.get_term(self.deg)
+        for i in range(self.deg):
+            self.eqs[i].norm(self.deg, fc)
+            self.eqs[i] -= eq
+
+        self.eqs.append(eq)
+        self.deg += 1
+
+    def result(self):
+        l = []
+        for i in range(self.deg):
+            l.append(self.eqs[i].ans / self.eqs[i].get_term(i))
+        return l
+
+
+m = Solver()
+
+m.add_pair(1, 1)
+m.add_pair(2, 2)
+m.add_pair(3,4)
+print(m.result())

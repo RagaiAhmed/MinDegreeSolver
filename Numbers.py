@@ -8,7 +8,7 @@ class RNum:
     """
     pr = 1e-10  # precision
 
-    def __init__(self, numerator, denominator):
+    def __init__(self, numerator, denominator=1):
         """
         - Stores the numerator and denominator.
         - Includes the simplify bonus you requested but here it is in the init 
@@ -16,7 +16,9 @@ class RNum:
         :param numerator: upper part of fraction
         :param denominator: lower part of fraction
         """
-
+        if isinstance(numerator, self.__class__) or isinstance(denominator, self.__class__):
+            self.val = (numerator / denominator).val
+            return
         if not denominator:
             raise ZeroDivisionError("Error trying to divide by zero !")
         if denominator < 0:
@@ -78,6 +80,9 @@ class RNum:
             return RNum(self.val[0] * other.val[0], self.val[1] * other.val[1])
         return RNum(self.val[0] * other, self.val[1])
 
+    def __rmul__(self, other):
+        return self.__mul__(other)
+
     def __truediv__(self, other):
         """
         :param other: other number to be divided on
@@ -88,6 +93,11 @@ class RNum:
             return RNum(self.val[0] * other.val[1], self.val[1] * other.val[0])
         return RNum(self.val[0], self.val[1] * other)
 
+    def __rtruediv__(self, other):
+        if isinstance(other, self.__class__):
+            # Numerator with denominator and denominator with numerator
+            return RNum(self.val[1] * other.val[0], self.val[0] * other.val[1])
+        return RNum(self.val[1]* other, self.val[0] )
     def __pow__(self, power):
         """
         :param power: an integer to raise  
