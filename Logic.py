@@ -1,15 +1,24 @@
 from Numbers import RNum
 
-RNum.pr = 0.5
-
 
 class Eq:
+    """
+    Should have documented this long ago
+    Now I forgot what it does 
+    I spent 1 hour of analyzing code to remember what it does
+    
+    ** This class stores more than one substitution (x) and the result f(x) 
+    as an infinite terms expression : f(x)=a+bx+cx^2+dx^3 ....
+    computed only by giving term of power of x
+    //well it also stores the coefficient to each whole sequence like that
+    """
+
     def __init__(self, x, fx):
-        self.op = [x]
-        self.co_ef = [RNum(1)]
+        self.op = [x]  # array of values of x substituted
+        self.co_ef = [RNum(1)]  # coefficient for each sequence
         self.ans = fx
 
-    def get_term(self, n):
+    def get_term(self, n):  # computes the coefficient for the term x of given power
         tot = RNum(0)
         for x in range(len(self.op)):
             tot += (self.op[x] ** n) * self.co_ef[x]
@@ -66,10 +75,25 @@ class Solver:
             l.append(self.eqs[i].ans / self.eqs[i].get_term(i))
         return l
 
+#
+# m = Solver()
+#
+# mm = [int(x) for x in input().split()]
+# while mm:
+#     m.add_pair(mm[0], mm[1])
+#     mm = [int(x) for x in input().split()]
+#
+# print(m.result())
 
-m = Solver()
+i = 1
+while 1:
+    input()
+    s = 0
+    m = Solver()
 
-m.add_pair(1, 1)
-m.add_pair(2, 2)
-m.add_pair(3,4)
-print(m.result())
+    for x in range(1, i + 3):
+        s+=x**i
+        m.add_pair(x,s)
+    print(m.result())
+    i+=1
+
