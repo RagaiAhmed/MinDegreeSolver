@@ -11,8 +11,6 @@ class RNum:
     def __init__(self, numerator, denominator=1):
         """
         - Stores the numerator and denominator.
-        - Includes the simplify bonus you requested but here it is in the init 
-             as the operations returns new objects and to make sure it is always stored simplified.
         :param numerator: upper part of fraction
         :param denominator: lower part of fraction
         """
