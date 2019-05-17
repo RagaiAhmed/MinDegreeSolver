@@ -3,7 +3,7 @@ class RNum:
     Class holding 2 integers a numerator and denominator representing a fraction
     - can deal with negatives ex : -7/9
     - can deal with decimals  ex : 5.7/1.3
-    - any operation can be applied on it ex: + , - , * , / , ** 
+    - any operation can be applied on it example : + , - , * , / , ** 
     - warranty free !! hold your numbers tight cause we ain't giving them back if you lost them
     """
     pr = 1e-10  # precision
